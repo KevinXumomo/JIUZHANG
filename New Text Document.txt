@@ -1,0 +1,43 @@
+        def kClosest(self, points, K):
+            dis = []
+            for point in points:
+                dis.append(self.distance(point[0], point[1]))
+            self.sort(points, K, 0, len(points) - 1, dis)
+            
+            return points[:K]
+        
+        def sort(self, points, K, left, right, dis):
+            mid = self.partition(points, left, right, dis)
+         
+            # print(points)
+            # print(mid)
+            if K == mid + 1:
+                return
+            elif K > mid - left + 1:
+                # print(K - (mid - left + 1), mid + 1, right)
+                self.sort(points, K - (mid - left + 1), mid + 1, right, dis)
+            elif K < mid - left + 1:
+                self.sort(points, K, left, mid - 1, dis)
+                
+        def partition(self, points, left, right, dis):
+            start, end = left, right
+            pivot = dis[start + (end - start) // 2]
+            # start += 1
+            while start <= end:
+                while start <= end and dis[start] < pivot:
+                    start += 1  
+                while start <= end and dis[end] >= pivot:
+                    end -= 1
+
+                if start <= end:
+                    points[start], points[end] = points[end], points[start]
+                    dis[start], dis[end] = dis[end], dis[start]
+                    start += 1
+                    end -= 1
+            
+            
+            return end
+            
+
+        def distance(self, x, y):
+            return math.sqrt(x ** 2 + y ** 2)
